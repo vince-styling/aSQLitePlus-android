@@ -19,7 +19,7 @@ import static android.database.DatabaseUtils.appendEscapedSQLString;
 
 /**
  * A base class for constructing SQL statement. Internal holding a {@link StringBuilder} to representing
- * the SQL statement. Offered many elegant methods to concatenating those acceptable clauses finally
+ * the SQL statement. Exposed many elegant methods to concatenating those acceptable clauses finally
  * complete the entire SQL statement.
  * <p/>
  * A Statement look as a String, only its toString() matter, just make sure that the {@link #toString()}

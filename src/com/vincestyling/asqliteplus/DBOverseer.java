@@ -203,7 +203,7 @@ public class DBOverseer {
     }
 
     /**
-     * Performs the SQL statement and return the ID of the row inserted.
+     * Performs the SQL statement and return the ID of the row inserted. Return -1 when error occurred.
      *
      * @param sql the INSERT SQL statement.
      * @return the row ID of the last row inserted if this insert is successful. 0 otherwise.
@@ -216,7 +216,7 @@ public class DBOverseer {
             dataBase.execSQL(sql.toString());
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
-            return 0;
+            return -1;
         } finally {
             if (dataBase != null) dataBase.close();
         }
@@ -224,12 +224,13 @@ public class DBOverseer {
     }
 
     /**
-     * Performs an update statement, included INSERT, UPDATE, DELETE commands.
+     * A handy way to expose the SQLiteDatabase.execSQL() method. Usually used to performs
+     * update kind's statement, included INSERT, UPDATE, DELETE, CREATE-TABLE, DROP-TABLE etc.
      *
-     * @param sql the update SQL statement.
+     * @param sql the SQL statement.
      * @return true if without any errors.
      */
-    public boolean executeUpdate(Object sql) {
+    public boolean execSQL(Object sql) {
         SQLiteDatabase dataBase = null;
         try {
             dataBase = mDBHelper.getWritableDatabase();
@@ -518,6 +519,15 @@ public class DBOverseer {
      * @param sql the SQL to be perform.
      */
     protected void debugSql(Object sql) {
-        if (mIsDebug) Log.d(TAG, "Performing: " + sql.toString());
+        if (mIsDebug) Log.d(TAG, String.format("Performing: %s", sql));
+    }
+
+    /**
+     * Mark whether current in debugging mode or not.
+     *
+     * @param isDebug true indicate in debugging.
+     */
+    public void setIsDebug(boolean isDebug) {
+        mIsDebug = isDebug;
     }
 }
