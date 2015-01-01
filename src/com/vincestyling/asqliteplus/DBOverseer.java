@@ -510,8 +510,8 @@ public class DBOverseer {
     }
 
     /**
-     * Informing the SQL to be performing, default just print it to
-     * debug level Logger when {@link #mIsDebug} is true.
+     * Informing the SQL to be performing, by default, just print it to
+     * DEBUG level Logger when {@link #mIsDebug} is true.
      * <p/>
      * Implementations should overwrite this method to define other
      * activities with the SQLs whenever necessary.
@@ -526,6 +526,7 @@ public class DBOverseer {
      * Mark whether current in debugging mode or not.
      *
      * @param isDebug true indicate in debugging.
+     * @see #debugSql(Object)
      */
     public void setIsDebug(boolean isDebug) {
         mIsDebug = isDebug;

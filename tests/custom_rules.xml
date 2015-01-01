@@ -2,6 +2,10 @@
 <project name="asqliteplus-test-rules" default="help">
     <!--
     An integrated target which consist of
+        clean(
+            Removes all the output files created by other targets),
+        uninstall(
+            Uninstalls the application from a running emulator or device),
         debug(
             compile & build both library and tests as APKs in debug mode),
         install(
@@ -10,5 +14,6 @@
         test(
             running all the tests and show the results in STDOUT).
     -->
+    <property name="test.runner" value=".MyInstrumentationTestRunner" />
     <target name="integrateTest" depends="clean, uninstall, debug, install, test"/>
 </project>

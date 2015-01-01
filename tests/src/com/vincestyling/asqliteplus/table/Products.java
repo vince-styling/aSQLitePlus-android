@@ -7,7 +7,7 @@ import com.vincestyling.asqliteplus.statement.CreateStatement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Products {
+public class Products extends Table {
     public static final String TABLE_NAME = "Products";
     public static final String PRODUCT_ID = "product_id";
     public static final String PRODUCT_NAME = "product_name";
@@ -16,15 +16,14 @@ public class Products {
     public static final String UNIT = "unit";
     public static final String PRICE = "price";
 
-    public static String getCreateStatment() {
-        return "CREATE TABLE " + TABLE_NAME + "(" +
-                PRODUCT_ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                PRODUCT_NAME + " VARCHAR(255), " +
-                SUPPLIER_ID + " INT, " +
-                CATEGORY_ID + " INT, " +
-                UNIT + " VARCHAR(255), " +
-                PRICE + " REAL " +
-                ")";
+    public static CharSequence buildColumnDeclarations() {
+        return concatColumns(
+                PRODUCT_ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT",
+                PRODUCT_NAME + " VARCHAR(255)",
+                SUPPLIER_ID + " INT",
+                CATEGORY_ID + " INT",
+                UNIT + " VARCHAR(255)",
+                PRICE + " REAL");
     }
 
     public final static List<Product> INIT_DATAS = new ArrayList<Product>();

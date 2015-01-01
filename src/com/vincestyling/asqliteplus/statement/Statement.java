@@ -257,7 +257,8 @@ public class Statement {
      * @see #eq(Object)
      */
     public Statement isNull() {
-        return eq(null);
+        statement.append(" IS NULL");
+        return this;
     }
 
     /**
@@ -267,7 +268,8 @@ public class Statement {
      * @see #neq(Object)
      */
     public Statement isNotNull() {
-        return neq(null);
+        statement.append(" IS NOT NULL");
+        return this;
     }
 
     /**
@@ -502,7 +504,7 @@ public class Statement {
      * @param columns the column list to be matching.
      * @return this statement.
      */
-    public Statement using(CharSequence columns) {
+    public Statement using(CharSequence... columns) {
         statement.append(" USING (");
         appendClauses(columns);
         statement.append(')');

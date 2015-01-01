@@ -2,7 +2,9 @@
 <!-- package name must be unique so suffix with "tests" so package loader doesn't ignore us -->
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.vincestyling.asqliteplus.tests">
+    package="com.vincestyling.asqliteplus.tests"
+    android:versionCode="1"
+    android:versionName="0.1">
     <!-- We add an application tag here just so that we can indicate that
          this package needs to link against the android.test library,
          which is needed when building test cases. -->
@@ -12,10 +14,10 @@
     <!--
     This declares that this application uses the instrumentation test runner targeting
     the package of com.vincestyling.asqliteplus.  To run the tests use the command:
-    "adb shell am instrument -w com.vincestyling.asqliteplus.tests/android.test.InstrumentationTestRunner"
+    "adb shell am instrument -w com.vincestyling.asqliteplus.tests/.MyInstrumentationTestRunner"
     -->
     <instrumentation
-        android:name="android.test.InstrumentationTestRunner"
+        android:name=".MyInstrumentationTestRunner"
         android:targetPackage="com.vincestyling.asqliteplus"
         android:label="Tests for com.vincestyling.asqliteplus"/>
 </manifest>

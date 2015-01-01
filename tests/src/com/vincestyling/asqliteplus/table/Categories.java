@@ -7,18 +7,16 @@ import com.vincestyling.asqliteplus.statement.CreateStatement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Categories {
+public class Categories extends Table {
     public static final String TABLE_NAME = "Categories";
     public static final String CATEGORY_ID = "category_id";
     public static final String CATEGORY_NAME = "category_name";
     public static final String DESCRIPTION = "description";
 
-    public static String getCreateStatment() {
-        return "CREATE TABLE " + TABLE_NAME + "(" +
-                CATEGORY_ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
-                CATEGORY_NAME + " VARCHAR(255), " +
-                DESCRIPTION + " VARCHAR(255) " +
-                ")";
+    public static CharSequence buildColumnDeclarations() {
+        return concatColumns(
+                CATEGORY_ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT",
+                CATEGORY_NAME + " VARCHAR(255)", DESCRIPTION + " VARCHAR(255)");
     }
 
     public final static List<Category> INIT_DATAS = new ArrayList<Category>();
