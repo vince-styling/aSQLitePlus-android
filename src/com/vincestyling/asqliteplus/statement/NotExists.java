@@ -13,17 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.vincestyling.asqliteplus.tests;
+package com.vincestyling.asqliteplus.statement;
 
-import android.os.Bundle;
-import android.test.InstrumentationTestRunner;
+import static java.lang.String.format;
 
-public class MyInstrumentationTestRunner extends InstrumentationTestRunner {
-    @Override
-    public void onCreate(Bundle arguments) {
-        super.onCreate(arguments);
-
-        MyDBOverseer.init(getTargetContext());
-        MyDBOverseer.get().setIsDebug(true);
+/**
+ * Appending the NOT EXISTS operator clause by a sub-query.
+ *
+ * @see Exists
+ */
+public class NotExists extends Exists {
+    /**
+     * Constructing the clause by a single sub-query.
+     *
+     * @param stmt apply a single sub-query as term.
+     */
+    public NotExists(Statement stmt) {
+        super(stmt);
+        clause = format("NOT %s", clause);
     }
 }

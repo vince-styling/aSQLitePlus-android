@@ -18,15 +18,21 @@ package com.vincestyling.asqliteplus.statement;
 import static java.lang.String.format;
 
 /**
- * This class used to parenthesizing the specified statement.
+ * This class used to producing an EXISTS operator clause which
+ * used to tests whether a sub-query fetches at least one row.
+ * <p/>
+ * For example:
+ * <p/>
+ * new Exists(QueryStatement.produce().from("tbl_name"))
+ * would produce "EXISTS (SELECT * FROM tbl_name)".
  */
-public class Parenthesize extends ClauseWrapper {
+public class Exists extends ClauseWrapper {
     /**
-     * Constructing the parenthesize clause.
+     * Constructing the clause by a single sub-query.
      *
-     * @param object the object to be parenthesizing for.
+     * @param stmt apply a single sub-query as term.
      */
-    public Parenthesize(Object object) {
-        clause = format("(%s)", object);
+    public Exists(Statement stmt) {
+        clause = format("EXISTS (%s)", stmt);
     }
 }

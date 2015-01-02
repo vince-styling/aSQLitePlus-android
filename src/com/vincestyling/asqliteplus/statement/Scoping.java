@@ -25,19 +25,12 @@ import static java.lang.String.format;
  * new Scoping("tbl_name", "column_name") would produce "tbl_name.column_name".
  * <p/>
  * new Scoping(new Alias("tbl_name", "tbl"), "column_name") would produce "tbl.column_name".
- * <p/>
- * <strong>Note:</strong> {@link Statement} would calls the {@link #toString()} method to take the final clause.
  */
-public class Scoping {
+public class Scoping extends ClauseWrapper {
     /**
      * The scoping pattern.
      */
     private static final String PATTERN = "%s.%s";
-
-    /**
-     * The final clause.
-     */
-    private String clause;
 
     /**
      * Constructing the clause by a table with Alias.
@@ -57,15 +50,5 @@ public class Scoping {
      */
     public Scoping(String table, CharSequence column) {
         clause = format(PATTERN, table, column);
-    }
-
-    /**
-     * Taking the final clause via this method.
-     *
-     * @return the final clause.
-     */
-    @Override
-    public String toString() {
-        return clause;
     }
 }

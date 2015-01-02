@@ -13,17 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.vincestyling.asqliteplus.tests;
+package com.vincestyling.asqliteplus.statement;
 
-import android.os.Bundle;
-import android.test.InstrumentationTestRunner;
+/**
+ * A base class for implementations which served a clause. {@link Statement}
+ * would calls the {@link #toString()} method to take the holding clause.
+ */
+public abstract class ClauseWrapper {
+    /**
+     * The holding clause.
+     */
+    protected String clause;
 
-public class MyInstrumentationTestRunner extends InstrumentationTestRunner {
+    /**
+     * Taking the holding clause via this method.
+     *
+     * @return the holding clause.
+     */
     @Override
-    public void onCreate(Bundle arguments) {
-        super.onCreate(arguments);
-
-        MyDBOverseer.init(getTargetContext());
-        MyDBOverseer.get().setIsDebug(true);
+    public String toString() {
+        return clause;
     }
 }

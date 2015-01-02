@@ -53,36 +53,39 @@ public class Statement {
     /**
      * Appending the WHERE clause.
      *
-     * @param column the condition column name. Can be either a normal String which just
-     *               the column name or wrapped the column name's {@link Function}||{@link Scoping} object.
+     * @param operand the condition operand. Usually be a normal String which just the column name or
+     *                wrapped the column name's {@link Function}||{@link Scoping} object. It can also
+     *                be an {@link Exists}||{@link NotExists} object which carry the (NOT)EXISTS clause.
      * @return this statement.
      */
-    public Statement where(Object column) {
-        statement.append(" WHERE ").append(column);
+    public Statement where(Object operand) {
+        statement.append(" WHERE ").append(operand);
         return this;
     }
 
     /**
      * Appending the AND clause.
      *
-     * @param column the condition column name. Can be either a normal String which just
-     *               the column name or wrapped the column name's {@link Function}||{@link Scoping} object.
+     * @param operand the condition operand. Usually be a normal String which just the column name or
+     *                wrapped the column name's {@link Function}||{@link Scoping} object. It can also
+     *                be an {@link Exists}||{@link NotExists} object which carry the (NOT)EXISTS clause.
      * @return this statement.
      */
-    public Statement and(Object column) {
-        statement.append(" AND ").append(column);
+    public Statement and(Object operand) {
+        statement.append(" AND ").append(operand);
         return this;
     }
 
     /**
      * Appending the OR clause.
      *
-     * @param column the condition column name. Can be either a normal String which just
-     *               the column name or wrapped the column name's {@link Function}||{@link Scoping} object.
+     * @param operand the condition operand. Usually be a normal String which just the column name or
+     *                wrapped the column name's {@link Function}||{@link Scoping} object. It can also
+     *                be an {@link Exists}||{@link NotExists} object which carry the (NOT)EXISTS clause.
      * @return this statement.
      */
-    public Statement or(Object column) {
-        statement.append(" OR ").append(column);
+    public Statement or(Object operand) {
+        statement.append(" OR ").append(operand);
         return this;
     }
 
@@ -101,6 +104,9 @@ public class Statement {
 
     /**
      * Appending the ASCENDING order clause.
+     * <p/>
+     * <strong>Notice</strong>: This clause often be omitted because the
+     * ORDER BY keyword sorts the records in ASCENDING order by default.
      *
      * @return this statement.
      */
@@ -182,24 +188,31 @@ public class Statement {
         return this;
     }
 
-    protected Statement term(String op, Object value) {
+    /**
+     * Appending those comparison operators clause.
+     *
+     * @param op    the operator.
+     * @param value the comparand.
+     * @return this statement.
+     */
+    protected Statement compare(String op, Object value) {
         statement.append(' ').append(op).append(' ');
         append(value);
         return this;
     }
 
     /**
-     * Appending the equals clause.
+     * Appending the equals comparison clause.
      *
      * @param value the term's value, will auto quoting if instance of {@link String}.
      * @return this statement.
      */
     public Statement eq(Object value) {
-        return term("=", value);
+        return compare("=", value);
     }
 
     /**
-     * Appending the non-equals clause.
+     * Appending the non-equals comparison clause.
      * <p/>
      * <strong>Note:</strong> The non-equals operator can be either "!=" or "<>", here used "<>".
      *
@@ -207,54 +220,53 @@ public class Statement {
      * @return this statement.
      */
     public Statement neq(Object value) {
-        return term("<>", value);
+        return compare("<>", value);
     }
 
     /**
-     * Appending the greater than clause.
+     * Appending the greater than comparison clause.
      *
      * @param value the term's value, will auto quoting if instance of {@link String}.
      * @return this statement.
      */
     public Statement gt(Object value) {
-        return term(">", value);
+        return compare(">", value);
     }
 
     /**
-     * Appending the equals or greater than clause.
+     * Appending the equals or greater than comparison clause.
      *
      * @param value the term's value, will auto quoting if instance of {@link String}.
      * @return this statement.
      */
     public Statement egt(Object value) {
-        return term(">=", value);
+        return compare(">=", value);
     }
 
     /**
-     * Appending the less than clause.
+     * Appending the less than comparison clause.
      *
      * @param value the term's value, will auto quoting if instance of {@link String}.
      * @return this statement.
      */
     public Statement lt(Object value) {
-        return term("<", value);
+        return compare("<", value);
     }
 
     /**
-     * Appending the equals or less than clause.
+     * Appending the equals or less than comparison clause.
      *
      * @param value the term's value, will auto quoting if instance of {@link String}.
      * @return this statement.
      */
     public Statement elt(Object value) {
-        return term("<=", value);
+        return compare("<=", value);
     }
 
     /**
-     * Alias method of {@link #eq(Object)} since "IS" operator work like "=".
+     * Appending the IS NULL operator clause.
      *
      * @return this statement.
-     * @see #eq(Object)
      */
     public Statement isNull() {
         statement.append(" IS NULL");
@@ -262,10 +274,9 @@ public class Statement {
     }
 
     /**
-     * Alias method of {@link #neq(Object)} since "IS NOT" operator work like "<>".
+     * Appending the IS NOT NULL operator clause.
      *
      * @return this statement.
-     * @see #neq(Object)
      */
     public Statement isNotNull() {
         statement.append(" IS NOT NULL");
@@ -279,7 +290,13 @@ public class Statement {
      * @return this statement.
      */
     public Statement in(Object... values) {
-        return range(false, values);
+        statement.append(" IN (");
+        for (int i = 0; i < values.length; i++) {
+            if (i > 0) statement.append(", ");
+            append(values[i]);
+        }
+        statement.append(')');
+        return this;
     }
 
     /**
@@ -288,8 +305,9 @@ public class Statement {
      * @param stmt apply a single sub-query as terms, the sub-query must have a single result column.
      * @return this statement.
      */
-    public Statement in(QueryStatement stmt) {
-        return range(false, stmt);
+    public Statement in(Statement stmt) {
+        statement.append(" IN (").append(stmt).append(')');
+        return this;
     }
 
     /**
@@ -299,7 +317,8 @@ public class Statement {
      * @return this statement.
      */
     public Statement notIn(Object... values) {
-        return range(true, values);
+        statement.append(" NOT");
+        return in(values);
     }
 
     /**
@@ -308,41 +327,9 @@ public class Statement {
      * @param stmt apply a single sub-query as terms, the sub-query must have a single result column.
      * @return this statement.
      */
-    public Statement notIn(QueryStatement stmt) {
-        return range(true, stmt);
-    }
-
-    /**
-     * @param operand operand on the right, might be a QueryStatement or an Object Array.
-     * @return this statement.
-     */
-    protected Statement range(boolean isNon, Object operand) {
-        if (isNon) statement.append(" NOT");
-        statement.append(" IN (");
-        if (operand instanceof QueryStatement) {
-            append(operand);
-        } else {
-            Object[] values = (Object[]) operand;
-            for (int i = 0; i < values.length; i++) {
-                if (i > 0) statement.append(", ");
-                append(values[i]);
-            }
-        }
-        statement.append(')');
-        return this;
-    }
-
-    /**
-     * Appending the EXISTS operator clause by a single sub-query.
-     *
-     * @param stmt apply a single sub-query as terms.
-     * @return this statement.
-     */
-    public Statement exists(QueryStatement stmt) {
-        statement.append(" EXISTS (");
-        append(stmt);
-        statement.append(')');
-        return this;
+    public Statement notIn(Statement stmt) {
+        statement.append(" NOT");
+        return in(stmt);
     }
 
     /**
@@ -504,7 +491,7 @@ public class Statement {
      * @param columns the column list to be matching.
      * @return this statement.
      */
-    public Statement using(CharSequence... columns) {
+    public Statement using(Object... columns) {
         statement.append(" USING (");
         appendClauses(columns);
         statement.append(')');

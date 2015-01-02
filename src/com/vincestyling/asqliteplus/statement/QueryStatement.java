@@ -78,16 +78,16 @@ public class QueryStatement extends Statement {
      * @return the created statement.
      * @see android.database.sqlite.SQLiteQueryBuilder#buildUnionQuery(String[], String, String)
      */
-    public static QueryStatement union(boolean distinct, QueryStatement... subQueries) {
-        QueryStatement queryStmt = new QueryStatement();
+    public static Statement union(boolean distinct, Statement... subQueries) {
+        QueryStatement stmt = new QueryStatement();
 
         String unionOperator = distinct ? " UNION " : " UNION ALL ";
 
         for (int i = 0; i < subQueries.length; i++) {
-            if (i > 0) queryStmt.statement.append(unionOperator);
-            queryStmt.statement.append(subQueries[i]);
+            if (i > 0) stmt.statement.append(unionOperator);
+            stmt.statement.append(subQueries[i]);
         }
 
-        return queryStmt;
+        return stmt;
     }
 }

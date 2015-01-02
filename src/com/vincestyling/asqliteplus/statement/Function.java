@@ -49,80 +49,88 @@ public class Function {
     /**
      * The SQLite MAX function allows us to select the highest(maximum) value for a certain column.
      *
-     * @param column the desired column you want to evaluating.
+     * @param column the desired column you want to evaluating. Can be either a normal String which just
+     *               the column name or wrapped the column name's {@link Scoping} object.
      * @return the created function.
      */
-    public static Function max(String column) {
+    public static Function max(Object column) {
         return new Function(format("max(%s)", column));
     }
 
     /**
      * The SQLite MIN function allows us to select the lowest(minimum) value for a certain column.
      *
-     * @param column the desired column you want to evaluating.
+     * @param column the desired column you want to evaluating. Can be either a normal String which just
+     *               the column name or wrapped the column name's {@link Scoping} object.
      * @return the created function.
      */
-    public static Function min(String column) {
+    public static Function min(Object column) {
         return new Function(format("min(%s)", column));
     }
 
     /**
      * The SQLite AVG function selects the average value for certain table column.
      *
-     * @param column the desired column you want to evaluating.
+     * @param column the desired column you want to evaluating. Can be either a normal String which just
+     *               the column name or wrapped the column name's {@link Scoping} object.
      * @return the created function.
      */
-    public static Function avg(String column) {
+    public static Function avg(Object column) {
         return new Function(format("avg(%s)", column));
     }
 
     /**
      * The SQLite SUM function allows selecting the total for a numeric column.
      *
-     * @param column the desired column you want to evaluating.
+     * @param column the desired column you want to evaluating. Can be either a normal String which just
+     *               the column name or wrapped the column name's {@link Scoping} object.
      * @return the created function.
      */
-    public static Function sum(String column) {
+    public static Function sum(Object column) {
         return new Function(format("sum(%s)", column));
     }
 
     /**
      * The SQLite ABS function returns the absolute value of the numeric argument.
      *
-     * @param column the desired column you want to evaluating.
+     * @param column the desired column you want to evaluating. Can be either a normal String which just
+     *               the column name or wrapped the column name's {@link Scoping} object.
      * @return the created function.
      */
-    public static Function abs(String column) {
+    public static Function abs(Object column) {
         return new Function(format("abs(%s)", column));
     }
 
     /**
      * The SQLite UPPER function converts a string into upper-case letters.
      *
-     * @param column the desired column you want to evaluating.
+     * @param column the desired column you want to evaluating. Can be either a normal String which just
+     *               the column name or wrapped the column name's {@link Scoping} object.
      * @return the created function.
      */
-    public static Function upper(String column) {
+    public static Function upper(Object column) {
         return new Function(format("upper(%s)", column));
     }
 
     /**
      * The SQLite LOWER function converts a string into lower-case letters.
      *
-     * @param column the desired column you want to evaluating.
+     * @param column the desired column you want to evaluating. Can be either a normal String which just
+     *               the column name or wrapped the column name's {@link Scoping} object.
      * @return the created function.
      */
-    public static Function lower(String column) {
+    public static Function lower(Object column) {
         return new Function(format("lower(%s)", column));
     }
 
     /**
      * The SQLite LENGTH function returns the length of a string.
      *
-     * @param column the desired column you want to evaluating.
+     * @param column the desired column you want to evaluating. Can be either a normal String which just
+     *               the column name or wrapped the column name's {@link Scoping} object.
      * @return the created function.
      */
-    public static Function length(String column) {
+    public static Function length(Object column) {
         return new Function(format("length(%s)", column));
     }
 

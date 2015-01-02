@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2015 Vince Styling
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.vincestyling.asqliteplus.tests;
 
 import android.test.AndroidTestCase;
@@ -13,7 +28,11 @@ public abstract class BaseDBTestCase extends AndroidTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        setUpDB();
 
+    }
+
+    protected void setUpDB() throws Exception {
         // creating and populating dummy data to tables.
         Table.prepare(Categories.class);
         mStatement = QueryStatement.rowCount().from(Categories.TABLE_NAME);
@@ -26,18 +45,15 @@ public abstract class BaseDBTestCase extends AndroidTestCase {
         assertGreatThan(0);
     }
 
-    protected void setupTables() throws Exception {
-    }
-
     protected Statement mStatement;
 
-    protected void assertGreatThan(int right) {
-        assertGreatThan(MyDBOverseer.get().getInt(mStatement), right);
+    protected void assertGreatThan(int comparand) {
+        assertGreatThan(MyDBOverseer.get().getInt(mStatement), comparand);
     }
 
-    protected void assertGreatThan(int left, int right) {
-        if (left > right) return;
-        fail(String.format("great than not as expected. left :<%d> right:<%d>", left, right));
+    protected void assertGreatThan(int operand, int comparand) {
+        if (operand > comparand) return;
+        fail(String.format("great than not as expected. operand :<%d> comparand :<%d>", operand, comparand));
     }
 
     protected void assertSQLEquals(String expected) {
