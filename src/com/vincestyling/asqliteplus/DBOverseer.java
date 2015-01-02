@@ -18,8 +18,8 @@ package com.vincestyling.asqliteplus;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
-import com.vincestyling.asqliteplus.statement.Function;
 import com.vincestyling.asqliteplus.statement.Parenthesize;
 import com.vincestyling.asqliteplus.statement.QueryStatement;
 import com.vincestyling.asqliteplus.statement.Statement;
@@ -70,7 +70,7 @@ public class DBOverseer {
 
     /**
      * Performs the query and take the INTEGER value in the first column of the first row.
-     * Return 0 as default if not result presented.
+     * Return 0 as default either not result presented or error occurred.
      *
      * @param sql the SQL in querying form.
      * @return the INTEGER value.
@@ -81,7 +81,7 @@ public class DBOverseer {
 
     /**
      * Performs the query and take the INTEGER value in the first column of the first row.
-     * Return the given value as default if not result presented.
+     * Return the given value as default either not result presented or error occurred.
      *
      * @param sql the SQL in querying form.
      * @param def the default value.
@@ -127,7 +127,7 @@ public class DBOverseer {
 
     /**
      * Performs the query and take the STRING value in the first column of the first row.
-     * Return null as default if not result presented.
+     * Return null as default either not result presented or error occurred.
      *
      * @param sql the SQL in querying form.
      * @return the STRING value.
@@ -138,7 +138,7 @@ public class DBOverseer {
 
     /**
      * Performs the query and take the STRING value in the first column of the first row.
-     * Return the given value as default if not result presented.
+     * Return the given value as default either not result presented or error occurred.
      *
      * @param sql the SQL in querying form.
      * @param def the default value.
@@ -203,46 +203,62 @@ public class DBOverseer {
     }
 
     /**
-     * Performs the SQL statement and return the ID of the row inserted. Return -1 when error occurred.
+     * A convenience way to expose the {@link SQLiteStatement#executeInsert()} method.
+     * <p/>
+     * Performs the SQL statement and return the ID of the row inserted due to this call.
+     * The SQL statement should be an INSERT for this to be a useful call.
      *
      * @param sql the INSERT SQL statement.
-     * @return the row ID of the last row inserted if this insert is successful. 0 otherwise.
+     * @return the row ID of the newly inserted row, if this insert is successful, -1 if an error occurred.
+     * @see android.database.sqlite.SQLiteDatabase#insert(String, String, android.content.ContentValues)
      */
-    public int executeInsert(Object sql) {
+    public long executeInsert(Object sql) {
         SQLiteDatabase dataBase = null;
+        SQLiteStatement statement = null;
         try {
             dataBase = mDBHelper.getWritableDatabase();
+            statement = dataBase.compileStatement(sql.toString());
             debugSql(sql);
-            dataBase.execSQL(sql.toString());
+            return statement.executeInsert();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
-            return -1;
         } finally {
+            if (statement != null) statement.close();
             if (dataBase != null) dataBase.close();
         }
-        return getInt(QueryStatement.produce(Function.lastInsertRowid()));
+        return -1;
     }
 
     /**
-     * A handy way to expose the SQLiteDatabase.execSQL() method. Usually used to performs
-     * update kind's statement, included INSERT, UPDATE, DELETE, CREATE-TABLE, DROP-TABLE etc.
+     * A convenience way to expose the {@link SQLiteStatement#executeUpdateDelete()} method.
+     * <p/>
+     * Performs a single SQL statement that is NOT a <b>SELECT</b> or any other SQL statement
+     * that returns data. Would return the number of rows affected by execution of this SQL
+     * statement, thus usually used to perform a update kind's statement, including INSERT,
+     * UPDATE, DELETE, CREATE-TABLE, DROP-TABLE etc.
      *
      * @param sql the SQL statement.
-     * @return true if without any errors.
+     * @return the number of rows affected by this SQL statement execution.
+     * @see android.database.sqlite.SQLiteDatabase#update(String, android.content.ContentValues, String, String[])
+     * @see android.database.sqlite.SQLiteDatabase#delete(String, String, String[])
+     * @see android.database.sqlite.SQLiteDatabase#execSQL(String, Object[])
+     * @see android.database.sqlite.SQLiteDatabase#execSQL(String)
      */
-    public boolean execSQL(Object sql) {
+    public int executeSql(Object sql) {
         SQLiteDatabase dataBase = null;
+        SQLiteStatement statement = null;
         try {
             dataBase = mDBHelper.getWritableDatabase();
+            statement = dataBase.compileStatement(sql.toString());
             debugSql(sql);
-            dataBase.execSQL(sql.toString());
-            return true;
+            return statement.executeUpdateDelete();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         } finally {
+            if (statement != null) statement.close();
             if (dataBase != null) dataBase.close();
         }
-        return false;
+        return 0;
     }
 
     /**

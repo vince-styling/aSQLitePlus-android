@@ -55,6 +55,7 @@ public class CreateStatement extends Statement {
      * @param table the name of the table to inserting.
      * @return the created statement.
      * @see android.database.sqlite.SQLiteDatabase#CONFLICT_REPLACE
+     * @see android.database.sqlite.SQLiteDatabase#replace(String, String, android.content.ContentValues)
      */
     public static CreateStatement orReplace(CharSequence table) {
         return produce(table, "REPLACE");

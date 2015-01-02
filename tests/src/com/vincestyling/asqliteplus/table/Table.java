@@ -36,8 +36,8 @@ public abstract class Table {
     public static void prepare(Class<? extends Table> clazz) throws Exception {
         Object tableName = clazz.getField("TABLE_NAME").get(null);
 
-        MyDBOverseer.get().execSQL(DROP_STATMENT + tableName);
-        MyDBOverseer.get().execSQL(String.format("%s%s(%s)", CREATE_STATMENT,
+        MyDBOverseer.get().executeSql(DROP_STATMENT + tableName);
+        MyDBOverseer.get().executeSql(String.format("%s%s(%s)", CREATE_STATMENT,
                 tableName, clazz.getMethod("buildColumnDeclarations").invoke(null)));
 
         MyDBOverseer.get().executeBatch(
