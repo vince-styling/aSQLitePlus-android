@@ -23,40 +23,49 @@ package com.vincestyling.asqliteplus.statement;
  */
 public class QueryStatement extends Statement {
     /**
-     * Producing a SELECT statement, append the DISTINCT clause if needed.
-     *
-     * @param distinct true if you want each row to be unique, false otherwise.
-     * @param columns  A list of which columns you desired to return, leave it empty will return all columns.
-     *                 Each column can be either a normal String which just the column name or wrapped
-     *                 the column name's {@link Function}||{@link Alias}||{@link Scoping} object.
-     * @return the created statement.
-     */
-    public static QueryStatement produce(boolean distinct, Object... columns) {
-        QueryStatement queryStmt = new QueryStatement();
-
-        queryStmt.statement.append("SELECT");
-        if (distinct) queryStmt.statement.append(" DISTINCT");
-
-        if (columns != null && columns.length > 0) {
-            queryStmt.statement.append(' ');
-            queryStmt.appendClauses(columns);
-        } else {
-            queryStmt.statement.append(" *");
-        }
-
-        return queryStmt;
-    }
-
-    /**
-     * Producing a SELECT statement.
+     * Producing a normal SELECT statement.
      *
      * @param columns A list of which columns you desired to return, leave it empty will return all columns.
      *                Each column can be either a normal String which just the column name or wrapped
      *                the column name's {@link Function}||{@link Alias}||{@link Scoping} object.
      * @return the created statement.
      */
-    public static QueryStatement produce(Object... columns) {
-        return produce(false, columns);
+    public static Statement produce(Object... columns) {
+        QueryStatement queryStmt = new QueryStatement();
+        queryStmt.statement.append("SELECT");
+        return queryStmt.processColumns(columns);
+    }
+
+    /**
+     * Producing a SELECT statement by DISTINCT clause.
+     *
+     * @param columns A list of which columns you desired to return, leave it empty will return all columns.
+     *                Each column can be either a normal String which just the column name or wrapped
+     *                the column name's {@link Function}||{@link Alias}||{@link Scoping} object.
+     * @return the created statement.
+     */
+    public static Statement distinct(Object... columns) {
+        QueryStatement queryStmt = new QueryStatement();
+        queryStmt.statement.append("SELECT DISTINCT");
+        return queryStmt.processColumns(columns);
+    }
+
+    /**
+     * Processing the column list, append to statement.
+     *
+     * @param columns A list of which columns you desired to return, leave it empty will return all columns.
+     *                Each column can be either a normal String which just the column name or wrapped
+     *                the column name's {@link Function}||{@link Alias}||{@link Scoping} object.
+     * @return the created statement.
+     */
+    public Statement processColumns(Object... columns) {
+        statement.append(' ');
+        if (columns != null && columns.length > 0) {
+            appendClauses(columns);
+        } else {
+            statement.append('*');
+        }
+        return this;
     }
 
     /**
@@ -64,7 +73,7 @@ public class QueryStatement extends Statement {
      *
      * @return the created statement.
      */
-    public static QueryStatement rowCount() {
+    public static Statement rowCount() {
         return produce(Function.count());
     }
 

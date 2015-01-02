@@ -23,13 +23,13 @@ import com.vincestyling.asqliteplus.tests.BaseDBTestCase;
 public class GeneralQueryTest extends BaseDBTestCase {
 
     public void testDistinctClause() {
-        mStatement = QueryStatement.produce(true, Products.CATEGORY_ID).from(Products.TABLE_NAME);
+        mStatement = QueryStatement.distinct(Products.CATEGORY_ID).from(Products.TABLE_NAME);
 
         assertSQLEquals("SELECT DISTINCT category_id FROM Products");
 
         assertResultSizeEquals(8);
 
-        mStatement = QueryStatement.produce(true, Products.SUPPLIER_ID,
+        mStatement = QueryStatement.distinct(Products.SUPPLIER_ID,
                 Products.PRODUCT_ID, Products.PRODUCT_NAME).from(Products.TABLE_NAME);
 
         assertSQLEquals("SELECT DISTINCT supplier_id, product_id, product_name FROM Products");
