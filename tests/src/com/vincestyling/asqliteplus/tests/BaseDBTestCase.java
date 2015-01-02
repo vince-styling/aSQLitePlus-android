@@ -25,11 +25,12 @@ import com.vincestyling.asqliteplus.table.Table;
 import java.util.List;
 
 public abstract class BaseDBTestCase extends AndroidTestCase {
+    protected Statement mStatement;
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         setUpDB();
-
     }
 
     protected void setUpDB() throws Exception {
@@ -45,8 +46,6 @@ public abstract class BaseDBTestCase extends AndroidTestCase {
         assertGreatThan(0);
     }
 
-    protected Statement mStatement;
-
     protected void assertGreatThan(int comparand) {
         assertGreatThan(MyDBOverseer.get().getInt(mStatement), comparand);
     }
@@ -54,6 +53,21 @@ public abstract class BaseDBTestCase extends AndroidTestCase {
     protected void assertGreatThan(int operand, int comparand) {
         if (operand > comparand) return;
         fail(String.format("great than not as expected. operand :<%d> comparand :<%d>", operand, comparand));
+    }
+
+    protected void assertSQLHasResult() {
+        if (MyDBOverseer.get().checkIfExists(mStatement)) return;
+        fail(String.format("Performing SQL <%s> has no data returned.", mStatement));
+    }
+
+    protected void assertSQLHasNotResult() {
+        if (!MyDBOverseer.get().checkIfExists(mStatement)) return;
+        fail(String.format("Performing SQL <%s> has data returned.", mStatement));
+    }
+
+    protected void assertSQLSuccessful() {
+        if (MyDBOverseer.get().executeSql(mStatement) > 0) return;
+        fail(String.format("Performing SQL <%s> is not successful.", mStatement));
     }
 
     protected void assertSQLEquals(String expected) {

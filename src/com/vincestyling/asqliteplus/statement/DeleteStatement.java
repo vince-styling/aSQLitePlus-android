@@ -28,22 +28,9 @@ public class DeleteStatement extends Statement {
      * @param table the name of the table to deleting.
      * @return the created statement.
      */
-    public static DeleteStatement produce(CharSequence table) {
+    public static Statement produce(CharSequence table) {
         DeleteStatement deleteStmt = new DeleteStatement();
         deleteStmt.statement.append("DELETE");
-        deleteStmt.from(table);
-        return deleteStmt;
-    }
-
-    /**
-     * A handy way to constructing the TRUNCATE optimization statement.
-     *
-     * @param table the name of the table to truncating.
-     * @return the created statement.
-     */
-    public static DeleteStatement truncate(CharSequence table) {
-        DeleteStatement deleteStmt = new DeleteStatement();
-        deleteStmt.statement.append("TRUNCATE ").append(table);
-        return deleteStmt;
+        return deleteStmt.from(table);
     }
 }
