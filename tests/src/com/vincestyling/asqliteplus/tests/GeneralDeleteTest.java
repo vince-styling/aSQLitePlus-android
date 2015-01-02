@@ -10,29 +10,21 @@ public class GeneralDeleteTest extends BaseDBTestCase {
     public void testDeleteExplicitly() {
         mStatement = DeleteStatement.produce(Products.TABLE_NAME).where(Products.PRODUCT_ID).eq(1);
 
-        assertSQLEquals("DELETE FROM Products WHERE product_id = 1");
-
-        assertSQLSuccessful();
+        assertSQLSuccessful("DELETE FROM Products WHERE product_id = 1");
 
         mStatement = QueryStatement.produce().from(Products.TABLE_NAME).where(Products.PRODUCT_ID).eq(1);
 
-        assertSQLEquals("SELECT * FROM Products WHERE product_id = 1");
-
-        assertSQLHasNotResult();
+        assertSQLHasNotResult("SELECT * FROM Products WHERE product_id = 1");
     }
 
     public void testDeleteAllRows() {
         mStatement = DeleteStatement.produce(Categories.TABLE_NAME);
 
-        assertSQLEquals("DELETE FROM Categories");
-
-        assertSQLSuccessful();
+        assertSQLSuccessful("DELETE FROM Categories");
 
         mStatement = QueryStatement.produce().from(Categories.TABLE_NAME);
 
-        assertSQLEquals("SELECT * FROM Categories");
-
-        assertSQLHasNotResult();
+        assertSQLHasNotResult("SELECT * FROM Categories");
     }
 
 }

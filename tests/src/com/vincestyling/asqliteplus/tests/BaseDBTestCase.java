@@ -37,16 +37,15 @@ public abstract class BaseDBTestCase extends AndroidTestCase {
         // creating and populating dummy data to tables.
         Table.prepare(Categories.class);
         mStatement = QueryStatement.rowCount().from(Categories.TABLE_NAME);
-        assertSQLEquals("SELECT count(*) FROM Categories");
-        assertGreatThan(0);
+        assertGreatThan("SELECT count(*) FROM Categories", 0);
 
         Table.prepare(Products.class);
         mStatement = QueryStatement.rowCount().from(Products.TABLE_NAME);
-        assertSQLEquals("SELECT count(*) FROM Products");
-        assertGreatThan(0);
+        assertGreatThan("SELECT count(*) FROM Products", 0);
     }
 
-    protected void assertGreatThan(int comparand) {
+    protected void assertGreatThan(String expectedSQL, int comparand) {
+        assertSQLEquals(expectedSQL);
         assertGreatThan(MyDBOverseer.get().getInt(mStatement), comparand);
     }
 
@@ -55,39 +54,32 @@ public abstract class BaseDBTestCase extends AndroidTestCase {
         fail(String.format("great than not as expected. operand :<%d> comparand :<%d>", operand, comparand));
     }
 
-    protected void assertSQLHasResult() {
+    protected void assertSQLHasResult(String expectedSQL) {
+        assertSQLEquals(expectedSQL);
         if (MyDBOverseer.get().checkIfExists(mStatement)) return;
         fail(String.format("Performing SQL <%s> has no data returned.", mStatement));
     }
 
-    protected void assertSQLHasNotResult() {
+    protected void assertSQLHasNotResult(String expectedSQL) {
+        assertSQLEquals(expectedSQL);
         if (!MyDBOverseer.get().checkIfExists(mStatement)) return;
         fail(String.format("Performing SQL <%s> has data returned.", mStatement));
     }
 
-    protected void assertSQLSuccessful() {
+    protected void assertSQLSuccessful(String expectedSQL) {
+        assertSQLEquals(expectedSQL);
         if (MyDBOverseer.get().executeSql(mStatement) > 0) return;
         fail(String.format("Performing SQL <%s> is not successful.", mStatement));
     }
 
-    protected void assertSQLEquals(String expected) {
-        assertSQLEquals(expected, mStatement);
-    }
-
-    protected void assertSQLEquals(String expected, Statement actualStmt) {
-        assertEquals("SQL not as expected.", expected, actualStmt.toString());
-    }
-
-    protected void assertResultSizeEquals(int expectedSize) {
-        assertResultSizeEquals(expectedSize, mStatement);
-    }
-
-    protected void assertResultSizeEquals(int expectedSize, Statement stmt) {
-        assertResultSizeEquals(expectedSize, MyDBOverseer.get().getList(stmt, new SimpleRowMapper()));
-    }
-
-    protected void assertResultSizeEquals(int expectedSize, List actualResults) {
+    protected void assertResultSizeEquals(String expectedSQL, int expectedSize) {
+        assertSQLEquals(expectedSQL);
+        List actualResults = MyDBOverseer.get().getList(mStatement, new SimpleRowMapper());
         assertNotNull(actualResults);
         assertEquals("returned result amount not as expected.", expectedSize, actualResults.size());
+    }
+
+    protected void assertSQLEquals(String expectedSQL) {
+        assertEquals("SQL not as expected.", expectedSQL, mStatement.toString());
     }
 }

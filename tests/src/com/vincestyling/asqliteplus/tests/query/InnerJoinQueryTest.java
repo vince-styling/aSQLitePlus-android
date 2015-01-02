@@ -41,11 +41,9 @@ public final class InnerJoinQueryTest extends BaseDBTestCase {
                 .having(new Scoping(podAlias, Products.PRICE)).gt(30)
                 .orderBy(new Scoping(podAlias, Products.PRICE)).desc();
 
-        assertSQLEquals("SELECT pod.product_name, pod.price, pod.category_id, cat.category_name FROM " +
+        assertResultSizeEquals("SELECT pod.product_name, pod.price, pod.category_id, cat.category_name FROM " +
                 "Products AS pod, Categories AS cat WHERE pod.category_id = cat.category_id AND " +
-                "pod.price > 20 GROUP BY pod.category_id HAVING pod.price > 30 ORDER BY pod.price DESC");
-
-        assertResultSizeEquals(5);
+                "pod.price > 20 GROUP BY pod.category_id HAVING pod.price > 30 ORDER BY pod.price DESC", 5);
     }
 
     public void testFullTableNameScoping() {
@@ -59,11 +57,9 @@ public final class InnerJoinQueryTest extends BaseDBTestCase {
                 .and(new Scoping(Products.TABLE_NAME, Products.PRICE)).gt(10)
                 .orderBy(new Scoping(Products.TABLE_NAME, Products.PRICE));
 
-        assertSQLEquals("SELECT Products.product_name, Products.category_id, Categories.category_name " +
+        assertResultSizeEquals("SELECT Products.product_name, Products.category_id, Categories.category_name " +
                 "FROM Products, Categories WHERE Products.category_id = Categories.category_id AND " +
-                "Products.price > 10 ORDER BY Products.price");
-
-        assertResultSizeEquals(63);
+                "Products.price > 10 ORDER BY Products.price", 63);
     }
 
     public void testFullTableNameButColumnNameWithoutScoping() {
@@ -72,10 +68,8 @@ public final class InnerJoinQueryTest extends BaseDBTestCase {
                 .where(new Scoping(Products.TABLE_NAME, Products.CATEGORY_ID))
                 .eq(new Scoping(Categories.TABLE_NAME, Categories.CATEGORY_ID));
 
-        assertSQLEquals("SELECT product_name, category_name FROM " +
-                "Products, Categories WHERE Products.category_id = Categories.category_id");
-
-        assertResultSizeEquals(77);
+        assertResultSizeEquals("SELECT product_name, category_name FROM Products, Categories " +
+                "WHERE Products.category_id = Categories.category_id", 77);
     }
 
     public void testFullTableNameButColumnNameWithoutScopingAndAShorterStatementByUsingClause() {
@@ -83,9 +77,7 @@ public final class InnerJoinQueryTest extends BaseDBTestCase {
                 .from(Products.TABLE_NAME, Categories.TABLE_NAME)
                 .using(Products.CATEGORY_ID);
 
-        assertSQLEquals("SELECT product_name, category_name FROM Products, Categories USING (category_id)");
-
-        assertResultSizeEquals(77);
+        assertResultSizeEquals("SELECT product_name, category_name FROM Products, Categories USING (category_id)", 77);
     }
 
     public void testStandardSyntax() {
@@ -99,10 +91,8 @@ public final class InnerJoinQueryTest extends BaseDBTestCase {
                 .on(new Scoping(podAlias, Products.CATEGORY_ID))
                 .eq(new Scoping(catAlias, Categories.CATEGORY_ID));
 
-        assertSQLEquals("SELECT pod.product_name, pod.category_id, cat.category_name FROM " +
-                "Products AS pod JOIN Categories AS cat ON pod.category_id = cat.category_id");
-
-        assertResultSizeEquals(77);
+        assertResultSizeEquals("SELECT pod.product_name, pod.category_id, cat.category_name FROM " +
+                "Products AS pod JOIN Categories AS cat ON pod.category_id = cat.category_id", 77);
 
         mStatement = QueryStatement.produce(
                 new Scoping(podAlias, Products.PRODUCT_NAME),
@@ -112,10 +102,8 @@ public final class InnerJoinQueryTest extends BaseDBTestCase {
                 .on(Function.abs(new Scoping(podAlias, Products.CATEGORY_ID)))
                 .eq(Function.abs(new Scoping(catAlias, Categories.CATEGORY_ID)));
 
-        assertSQLEquals("SELECT pod.product_name, pod.category_id, cat.category_name FROM " +
-                "Products AS pod JOIN Categories AS cat ON abs(pod.category_id) = abs(cat.category_id)");
-
-        assertResultSizeEquals(77);
+        assertResultSizeEquals("SELECT pod.product_name, pod.category_id, cat.category_name FROM " +
+                "Products AS pod JOIN Categories AS cat ON abs(pod.category_id) = abs(cat.category_id)", 77);
     }
 
     public void testNaturalJoin() {
@@ -123,16 +111,12 @@ public final class InnerJoinQueryTest extends BaseDBTestCase {
                 .from(Categories.TABLE_NAME).naturalJoin(Products.TABLE_NAME)
                 .where(Function.length(Categories.CATEGORY_NAME)).elt(9);
 
-        assertSQLEquals("SELECT * FROM Categories NATURAL JOIN Products WHERE length(category_name) <= 9");
-
-        assertResultSizeEquals(29);
+        assertResultSizeEquals("SELECT * FROM Categories NATURAL JOIN Products WHERE length(category_name) <= 9", 29);
     }
 
     public void testCrossJoin() {
         mStatement = QueryStatement.produce().from(Products.TABLE_NAME).crossJoin(Categories.TABLE_NAME);
 
-        assertSQLEquals("SELECT * FROM Products CROSS JOIN Categories");
-
-        assertResultSizeEquals(616);
+        assertResultSizeEquals("SELECT * FROM Products CROSS JOIN Categories", 616);
     }
 }

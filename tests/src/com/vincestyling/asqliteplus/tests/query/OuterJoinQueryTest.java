@@ -36,10 +36,8 @@ public final class OuterJoinQueryTest extends BaseDBTestCase {
                 .on(new Scoping(podAlias, Products.CATEGORY_ID))
                 .eq(new Scoping(catAlias, Categories.CATEGORY_ID));
 
-        assertSQLEquals("SELECT pod.product_name, pod.supplier_id, pod.category_id, cat.category_name FROM " +
-                "Products AS pod LEFT JOIN Categories AS cat ON pod.category_id = cat.category_id");
-
-        assertResultSizeEquals(77);
+        assertResultSizeEquals("SELECT pod.product_name, pod.supplier_id, pod.category_id, cat.category_name FROM " +
+                "Products AS pod LEFT JOIN Categories AS cat ON pod.category_id = cat.category_id", 77);
     }
 
     public void testStandardSyntaxWithAShorterStatementByUsingClause() {
@@ -50,10 +48,8 @@ public final class OuterJoinQueryTest extends BaseDBTestCase {
                 new Scoping(catAlias, Categories.CATEGORY_NAME)
         ).from(podAlias).leftJoin(catAlias).using(Products.CATEGORY_ID);
 
-        assertSQLEquals("SELECT pod.product_name, cat.category_name FROM " +
-                "Products AS pod LEFT JOIN Categories AS cat USING (category_id)");
-
-        assertResultSizeEquals(77);
+        assertResultSizeEquals("SELECT pod.product_name, cat.category_name FROM " +
+                "Products AS pod LEFT JOIN Categories AS cat USING (category_id)", 77);
     }
 
     public void testNaturalJoin() {
@@ -62,10 +58,8 @@ public final class OuterJoinQueryTest extends BaseDBTestCase {
                 .where(Categories.CATEGORY_NAME).isNotNull()
                 .and(Products.PRICE).neq(10);
 
-        assertSQLEquals("SELECT product_name, category_name FROM Products " +
-                "NATURAL LEFT JOIN Categories WHERE category_name IS NOT NULL AND price <> 10");
-
-        assertResultSizeEquals(74);
+        assertResultSizeEquals("SELECT product_name, category_name FROM Products " +
+                "NATURAL LEFT JOIN Categories WHERE category_name IS NOT NULL AND price <> 10", 74);
 
         Alias podAlias = new Alias(Products.TABLE_NAME, "pod");
         Alias catAlias = new Alias(Categories.TABLE_NAME, "cat");
@@ -74,10 +68,8 @@ public final class OuterJoinQueryTest extends BaseDBTestCase {
                 .from(podAlias).leftNaturalJoin(catAlias)
                 .where(Products.PRICE).lt(20);
 
-        assertSQLEquals("SELECT pod.product_name, cat.category_name FROM Products AS pod " +
-                "NATURAL LEFT JOIN Categories AS cat WHERE price < 20");
-
-        assertResultSizeEquals(39);
+        assertResultSizeEquals("SELECT pod.product_name, cat.category_name FROM Products AS pod " +
+                "NATURAL LEFT JOIN Categories AS cat WHERE price < 20", 39);
     }
 
 }
