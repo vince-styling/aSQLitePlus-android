@@ -80,6 +80,10 @@ public abstract class BaseDBTestCase extends AndroidTestCase {
     }
 
     protected void assertSQLEquals(String expectedSQL) {
-        assertEquals("SQL not as expected.", expectedSQL, mStatement.toString());
+        assertSQLEquals(expectedSQL, mStatement);
+    }
+
+    protected void assertSQLEquals(String expectedSQL, Statement stmt) {
+        assertEquals("SQL not as expected.", expectedSQL, stmt.toString());
     }
 }

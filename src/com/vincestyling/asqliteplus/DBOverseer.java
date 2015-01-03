@@ -207,9 +207,15 @@ public class DBOverseer {
      * <p/>
      * Performs the SQL statement and return the ID of the row inserted due to this call.
      * The SQL statement should be an INSERT for this to be a useful call.
+     * <p/>
+     * Sometime, an INSERT could be creating more than one rows, e.g.
+     * "INSERT INTO tbl_name(...) SELECT ... FROM an_tbl_name",
+     * that the last created row ID would be returned.
      *
      * @param sql the INSERT SQL statement.
-     * @return the row ID of the newly inserted row, if this insert is successful, -1 if an error occurred.
+     * @return the row ID of the newly inserted row if this insert is successful, -1 if an error occurred.
+     * Note as long as insert was successful, this execution will always return a positive value, even if
+     * the operating table did not creating as a table that holding an auto increment INTEGER primary key.
      * @see android.database.sqlite.SQLiteDatabase#insert(String, String, android.content.ContentValues)
      */
     public long executeInsert(Object sql) {

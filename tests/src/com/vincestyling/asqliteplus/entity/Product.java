@@ -23,6 +23,9 @@ public class Product {
     private String unit;
     private double price;
 
+    public Product() {
+    }
+
     public Product(int productId, String productName, int supplierId, int categoryId, String unit, double price) {
         this.productId = productId;
         this.productName = productName;
