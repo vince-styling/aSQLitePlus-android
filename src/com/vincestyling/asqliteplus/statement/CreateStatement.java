@@ -138,26 +138,6 @@ public class CreateStatement extends Statement {
     }
 
     /**
-     * The "INSERT ... DEFAULT VALUES" statement inserts a single new row into the given table.
-     * Each column of the new row is populated with its default value.
-     * <p/>
-     * A correct form of the produced SQL would like "insert into tbl_name(column-1, column-2) default values".
-     * <p/>
-     * <strong>Notice:</strong> The {@link #columns(Object...)} method which used to specifying table columns
-     * must have already have been called before enable this clause.
-     * <p/>
-     * Interesting to know more details about "DEFAULT VALUES"? check the
-     * <a href="http://www.sqlite.org/lang_insert.html">SQLite documentation</a>'s
-     * describe about "The third form of the INSERT statement".
-     *
-     * @return this statement.
-     */
-    public CreateStatement defaultValues() {
-        statement.append(" DEFAULT VALUES");
-        return this;
-    }
-
-    /**
      * Using a SELECT statement instead of a VALUES clause. A new entry is inserted into
      * the table for each row of data returned by executing the SELECT statement.
      * <p/>
@@ -174,14 +154,13 @@ public class CreateStatement extends Statement {
      * @param stmt the subquery statement.
      * @return this statement.
      */
-    public CreateStatement entry(QueryStatement stmt) {
-        statement.append(" (").append(stmt).append(')');
+    public CreateStatement entry(Statement stmt) {
+        statement.append(' ').append(stmt);
         return this;
     }
 
     /**
-     * Concatenates all the given column names. Used for cooperating with
-     * {@link #defaultValues()} or {@link #entry(QueryStatement)} methods.
+     * Concatenates all the given column names. Used for cooperating with {@link #entry(Statement)} method.
      *
      * @param columns the column names.
      * @return this statement.
