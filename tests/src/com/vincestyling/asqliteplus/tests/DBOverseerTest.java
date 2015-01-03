@@ -17,7 +17,6 @@ package com.vincestyling.asqliteplus.tests;
 
 import com.vincestyling.asqliteplus.entity.Customer;
 import com.vincestyling.asqliteplus.statement.CreateStatement;
-import com.vincestyling.asqliteplus.statement.QueryStatement;
 import com.vincestyling.asqliteplus.table.Customers;
 import com.vincestyling.asqliteplus.table.Table;
 
@@ -25,11 +24,7 @@ public class DBOverseerTest extends BaseDBTestCase {
 
     @Override
     protected void setUpDB() throws Exception {
-//        super.setUpDB();
-
         Table.prepare(Customers.class);
-        mStatement = QueryStatement.rowCount().from(Customers.TABLE_NAME);
-        assertGreatThan("SELECT count(*) FROM Customers", 0);
     }
 
     public void testExecuteInsertButNotAutoincrementKeyWillReturn() {

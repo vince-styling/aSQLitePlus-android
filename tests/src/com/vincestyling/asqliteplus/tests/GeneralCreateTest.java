@@ -15,37 +15,45 @@
  */
 package com.vincestyling.asqliteplus.tests;
 
-import com.vincestyling.asqliteplus.entity.Product;
+import com.vincestyling.asqliteplus.entity.Supplier;
 import com.vincestyling.asqliteplus.statement.CreateStatement;
 import com.vincestyling.asqliteplus.statement.Parenthesize;
 import com.vincestyling.asqliteplus.statement.QueryStatement;
 import com.vincestyling.asqliteplus.statement.Statement;
-import com.vincestyling.asqliteplus.table.Products;
+import com.vincestyling.asqliteplus.table.Suppliers;
+import com.vincestyling.asqliteplus.table.Table;
 
 public class GeneralCreateTest extends BaseDBTestCase {
+    @Override
+    protected void setUpDB() throws Exception {
+        Table.prepare(Suppliers.class);
+    }
 
     public void testStandardSyntax() {
         // counting the row amount of table BEFORE perform the target SQL statement.
-        mStatement = QueryStatement.rowCount().from(Products.TABLE_NAME);
+        mStatement = QueryStatement.rowCount().from(Suppliers.TABLE_NAME);
         int beforeRowCount = MyDBOverseer.get().getInt(mStatement);
 
-        Product product = Products.INIT_DATAS.get(0);
-        mStatement = CreateStatement.produce(Products.TABLE_NAME)
-                .put(Products.PRODUCT_NAME, product.getProductName())
-                .put(Products.SUPPLIER_ID, product.getSupplierId())
-                .put(Products.CATEGORY_ID, product.getCategoryId())
-                .put(Products.UNIT, product.getUnit())
-                .put(Products.PRICE, product.getPrice());
+        Supplier supplier = Suppliers.INIT_DATAS.get(0);
+        mStatement = CreateStatement.produce(Suppliers.TABLE_NAME)
+                .put(Suppliers.SUPPLIER_NAME, supplier.getSupplierName())
+                .put(Suppliers.CONTACT_NAME, supplier.getContactName())
+                .put(Suppliers.ADDRESS, supplier.getAddress())
+                .put(Suppliers.CITY, supplier.getCity())
+                .put(Suppliers.POSTAL_CODE, supplier.getPostalCode())
+                .put(Suppliers.COUNTRY, supplier.getCountry())
+                .put(Suppliers.PHONE, supplier.getPhone());
 
-        assertSQLEquals("INSERT INTO Products(product_name, supplier_id, category_id, " +
-                "unit, price) VALUES('Chais', 1, 1, '10 boxes x 20 bags', 18.0)");
+        assertSQLEquals("INSERT INTO Suppliers(supplier_name, contact_name, address, city, " +
+                "postal_code, country, phone) VALUES('Exotic Liquid', 'Charlotte Cooper', " +
+                "'49 Gilbert St.', 'Londona', 'EC1 4SD', 'UK', '(171) 555-2222')");
 
         // assert the create-by-entry operations successful.
         int newProductId = (int) MyDBOverseer.get().executeInsert(mStatement);
         assertGreatThan(newProductId, 0);
 
         // counting the row amount of table AFTER perform the target SQL statement.
-        mStatement = QueryStatement.rowCount().from(Products.TABLE_NAME);
+        mStatement = QueryStatement.rowCount().from(Suppliers.TABLE_NAME);
         int afterRowCount = MyDBOverseer.get().getInt(mStatement);
 
         // comparing if the current rows count great than before.
@@ -54,31 +62,34 @@ public class GeneralCreateTest extends BaseDBTestCase {
 
     public void testCreateOrReplace() {
         // counting the row amount of table BEFORE perform the target SQL statement.
-        mStatement = QueryStatement.rowCount().from(Products.TABLE_NAME);
+        mStatement = QueryStatement.rowCount().from(Suppliers.TABLE_NAME);
         int beforeRowCount = MyDBOverseer.get().getInt(mStatement);
 
         // taking a sample entity then modify some fields.
-        Product product = Products.INIT_DATAS.get(2);
-        product.setProductName("DeAniseed");
-        product.setPrice(102.132);
+        Supplier supplier = Suppliers.INIT_DATAS.get(2);
+        supplier.setSupplierName("Grandma Kelly's Cap");
+        supplier.setCity("Houston");
 
-        mStatement = CreateStatement.orReplace(Products.TABLE_NAME)
-                .put(Products.PRODUCT_ID, product.getProductId())
-                .put(Products.PRODUCT_NAME, product.getProductName())
-                .put(Products.SUPPLIER_ID, product.getSupplierId())
-                .put(Products.CATEGORY_ID, product.getCategoryId())
-                .put(Products.UNIT, product.getUnit())
-                .put(Products.PRICE, product.getPrice());
+        mStatement = CreateStatement.orReplace(Suppliers.TABLE_NAME)
+                .put(Suppliers.SUPPLIER_ID, supplier.getSupplierId())
+                .put(Suppliers.SUPPLIER_NAME, supplier.getSupplierName())
+                .put(Suppliers.CONTACT_NAME, supplier.getContactName())
+                .put(Suppliers.ADDRESS, supplier.getAddress())
+                .put(Suppliers.CITY, supplier.getCity())
+                .put(Suppliers.POSTAL_CODE, supplier.getPostalCode())
+                .put(Suppliers.COUNTRY, supplier.getCountry())
+                .put(Suppliers.PHONE, supplier.getPhone());
 
-        assertSQLEquals("INSERT OR REPLACE INTO Products(product_id, product_name, supplier_id, category_id, " +
-                "unit, price) VALUES(3, 'DeAniseed', 1, 2, '12 - 550 ml bottles', 102.132)");
+        assertSQLEquals("INSERT OR REPLACE INTO Suppliers(supplier_id, supplier_name, contact_name, address, " +
+                "city, postal_code, country, phone) VALUES(3, 'Grandma Kelly''s Cap', 'Regina Murphy', " +
+                "'707 Oxford Rd.', 'Houston', '48104', 'USA', '(313) 555-5735')");
 
         // perform and assert the returned product id still been before.
-        int returnedProductId = (int) MyDBOverseer.get().executeInsert(mStatement);
-        assertEquals(returnedProductId, product.getProductId());
+        int returnedSupplierId = (int) MyDBOverseer.get().executeInsert(mStatement);
+        assertEquals(returnedSupplierId, supplier.getSupplierId());
 
         // counting the row amount of table AFTER perform the target SQL statement.
-        mStatement = QueryStatement.rowCount().from(Products.TABLE_NAME);
+        mStatement = QueryStatement.rowCount().from(Suppliers.TABLE_NAME);
         int afterRowCount = MyDBOverseer.get().getInt(mStatement);
 
         // assert no newly row effected.
@@ -86,46 +97,47 @@ public class GeneralCreateTest extends BaseDBTestCase {
 
         // taking the replaced row as entity then comparing the two values which
         // modified before to verify the "INSERT OR REPLACE" command successful.
-        mStatement = QueryStatement.produce().from(Products.TABLE_NAME)
-                .where(Products.PRODUCT_ID).eq(product.getProductId());
-        Product freshProduct = MyDBOverseer.get().getEntity(mStatement, Product.class);
+        mStatement = QueryStatement.produce().from(Suppliers.TABLE_NAME)
+                .where(Suppliers.SUPPLIER_ID).eq(supplier.getSupplierId());
+        Supplier freshSupplier = MyDBOverseer.get().getEntity(mStatement, Supplier.class);
 
-        assertNotNull(freshProduct);
-        assertEquals(freshProduct.getPrice(), product.getPrice());
-        assertEquals(freshProduct.getProductName(), product.getProductName());
+        assertNotNull(freshSupplier);
+        assertEquals(freshSupplier.getCity(), supplier.getCity());
+        assertEquals(freshSupplier.getSupplierName(), supplier.getSupplierName());
     }
 
     public void testCreateByEntry() {
         // create the sub-query SQL statement.
-        Statement queryStmt = QueryStatement.produce(Products.PRODUCT_NAME, Products.SUPPLIER_ID,
-                Products.CATEGORY_ID, Products.UNIT, Products.PRICE).from(Products.TABLE_NAME)
-                .where(Products.PRICE).elt(20).limit(10, 20);
+        Statement queryStmt = QueryStatement.produce(Suppliers.SUPPLIER_NAME, Suppliers.CONTACT_NAME,
+                Suppliers.ADDRESS, Suppliers.CITY, Suppliers.POSTAL_CODE, Suppliers.COUNTRY,
+                Suppliers.PHONE).from(Suppliers.TABLE_NAME).where(Suppliers.COUNTRY).eq("USA").limit(2, 1);
 
         // counting the sub-query SQL statement rows.
         Statement countStmt = QueryStatement.rowCount().from(new Parenthesize(queryStmt));
 
-        assertSQLEquals("SELECT count(*) FROM (SELECT product_name, supplier_id, category_id, " +
-                "unit, price FROM Products WHERE price <= 20 LIMIT 10 OFFSET 20)", countStmt);
+        assertSQLEquals("SELECT count(*) FROM (SELECT supplier_name, contact_name, address, city, postal_code, " +
+                "country, phone FROM Suppliers WHERE country = 'USA' LIMIT 2 OFFSET 1)", countStmt);
 
         int comingRowCount = MyDBOverseer.get().getInt(countStmt);
 
         // counting the row amount of table BEFORE perform the target SQL statement.
-        mStatement = QueryStatement.rowCount().from(Products.TABLE_NAME);
+        mStatement = QueryStatement.rowCount().from(Suppliers.TABLE_NAME);
         int beforeRowCount = MyDBOverseer.get().getInt(mStatement);
 
-        mStatement = CreateStatement.produce(Products.TABLE_NAME).columns(Products.PRODUCT_NAME,
-                Products.SUPPLIER_ID, Products.CATEGORY_ID, Products.UNIT, Products.PRICE).entry(queryStmt);
+        mStatement = CreateStatement.produce(Suppliers.TABLE_NAME).columns(Suppliers.SUPPLIER_NAME,
+                Suppliers.CONTACT_NAME, Suppliers.ADDRESS, Suppliers.CITY, Suppliers.POSTAL_CODE,
+                Suppliers.COUNTRY, Suppliers.PHONE).entry(queryStmt);
 
-        assertSQLEquals("INSERT INTO Products(product_name, supplier_id, category_id, unit, price) " +
-                "SELECT product_name, supplier_id, category_id, unit, price " +
-                "FROM Products WHERE price <= 20 LIMIT 10 OFFSET 20");
+        assertSQLEquals("INSERT INTO Suppliers(supplier_name, contact_name, address, city, postal_code, " +
+                "country, phone) SELECT supplier_name, contact_name, address, city, postal_code, " +
+                "country, phone FROM Suppliers WHERE country = 'USA' LIMIT 2 OFFSET 1");
 
         // assert the create-by-entry operations successful.
-        int lastProductId = (int) MyDBOverseer.get().executeInsert(mStatement);
-        assertGreatThan(lastProductId, 0);
+        int lastSupplierId = (int) MyDBOverseer.get().executeInsert(mStatement);
+        assertGreatThan(lastSupplierId, 0);
 
         // counting the row amount of table AFTER perform the target SQL statement.
-        mStatement = QueryStatement.rowCount().from(Products.TABLE_NAME);
+        mStatement = QueryStatement.rowCount().from(Suppliers.TABLE_NAME);
         int afterRowCount = MyDBOverseer.get().getInt(mStatement);
 
         // comparing if the new rows count equal as expected.
