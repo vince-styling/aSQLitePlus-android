@@ -15,6 +15,7 @@
     This declares that this application uses the instrumentation test runner targeting
     the package of com.vincestyling.asqliteplus.  To run the tests use the command:
     "adb shell am instrument -w com.vincestyling.asqliteplus.tests/.MyInstrumentationTestRunner"
+    "adb shell am instrument -w -e class com.vincestyling.asqliteplus.tests.GeneralUpdateTest com.vincestyling.asqliteplus.tests/.MyInstrumentationTestRunner"
     -->
     <instrumentation
         android:name=".MyInstrumentationTestRunner"

@@ -101,9 +101,7 @@ public class GeneralCreateTest extends BaseDBTestCase {
                 .where(Suppliers.SUPPLIER_ID).eq(supplier.getSupplierId());
         Supplier freshSupplier = MyDBOverseer.get().getEntity(mStatement, Supplier.class);
 
-        assertNotNull(freshSupplier);
-        assertEquals(freshSupplier.getCity(), supplier.getCity());
-        assertEquals(freshSupplier.getSupplierName(), supplier.getSupplierName());
+        assertSuppliersEquals(freshSupplier, supplier);
     }
 
     public void testCreateByEntry() {
@@ -142,6 +140,17 @@ public class GeneralCreateTest extends BaseDBTestCase {
 
         // comparing if the new rows count equal as expected.
         assertEquals(beforeRowCount + comingRowCount, afterRowCount);
+    }
+
+    public static void assertSuppliersEquals(Supplier leftSupplier, Supplier rightSupplier) {
+        assertNotNull(leftSupplier);
+        assertEquals(leftSupplier.getSupplierName(), rightSupplier.getSupplierName());
+        assertEquals(leftSupplier.getContactName(), rightSupplier.getContactName());
+        assertEquals(leftSupplier.getPostalCode(), rightSupplier.getPostalCode());
+        assertEquals(leftSupplier.getCountry(), rightSupplier.getCountry());
+        assertEquals(leftSupplier.getAddress(), rightSupplier.getAddress());
+        assertEquals(leftSupplier.getPhone(), rightSupplier.getPhone());
+        assertEquals(leftSupplier.getCity(), rightSupplier.getCity());
     }
 
 }
