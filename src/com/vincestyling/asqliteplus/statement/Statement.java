@@ -543,6 +543,17 @@ public class Statement {
         }
     }
 
+    /**
+     * Simply clone this Statement by create a new Statement which apply the original statement.
+     *
+     * @return the new statement.
+     */
+    public Statement copy() {
+        Statement stmt = new Statement();
+        stmt.statement.append(statement);
+        return stmt;
+    }
+
     @Override
     public String toString() {
         return statement.toString();

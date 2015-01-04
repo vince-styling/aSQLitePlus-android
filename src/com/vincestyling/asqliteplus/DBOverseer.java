@@ -57,14 +57,14 @@ public class DBOverseer {
     protected SQLiteOpenHelper mDBHelper;
 
     /**
-     * Fetches the newly inserted row ID of the specified table.
+     * Fetches the newly inserted row ID of the specified table. Return 0 if the given table without an INTEGER primary key.
      * <p/>
      * e.g. "select seq from sqlite_sequence where name = 'tbl_name'".
      *
      * @param table the name of the table.
      * @return the row ID of the newly inserted row of the table.
      */
-    public int getLastInsertRowId(String table) {
+    public int getLastInsertRowId(CharSequence table) {
         return getInt(QueryStatement.produce("seq").from("sqlite_sequence").where("name").eq(table));
     }
 
@@ -351,9 +351,8 @@ public class DBOverseer {
         int totalItemCount = getInt(QueryStatement.rowCount().from(new Parenthesize(sql)));
         if (totalItemCount > 0) {
             // fetch a single page of results.
-            sql.limit(pageItemCount, (pageNo - 1) * pageItemCount);
             PaginationList<T> records = new PaginationList<T>();
-            getList(sql, records, new RowMapper<T>() {
+            getList(sql.copy().limit(pageItemCount, (pageNo - 1) * pageItemCount), records, new RowMapper<T>() {
                 public T mapRow(Cursor cursor) {
                     return getEntity(cursor, clazz);
                 }
@@ -484,12 +483,10 @@ public class DBOverseer {
             String[] columnNames = cursor.getColumnNames();
 
             for (int index = 0; index < columnNames.length; index++) {
-                columnNames[index] = METHOD_PREFIX + translateColumnName(columnNames[index]);
-
                 // searching for a method named "set[ColumnName]" such as setLoginTime, setAge(case-insensitive).
                 for (Method method : clazz.getMethods()) {
                     // picking the matched method by name.
-                    if (method.getName().equalsIgnoreCase(columnNames[index])) {
+                    if (method.getName().equalsIgnoreCase(METHOD_PREFIX + translateColumnName(columnNames[index]))) {
                         // checking the parameter type.
                         Class paramType = method.getParameterTypes()[0];
 
