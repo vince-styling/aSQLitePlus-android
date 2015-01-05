@@ -2,11 +2,7 @@
 bin
 gen
 classes
-
-# Eclipse
-.project
-.classpath
-.settings
+local.properties
 
 # IntelliJ IDEA
 .idea
@@ -19,11 +15,6 @@ out
 target
 release.properties
 pom.xml.*
-
-# Ant
-build.xml
-local.properties
-proguard.cfg
 
 # OSX
 .DS_Store
