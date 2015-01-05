@@ -16,7 +16,8 @@
 package com.vincestyling.asqliteplus.tests;
 
 import com.vincestyling.asqliteplus.entity.Supplier;
-import com.vincestyling.asqliteplus.statement.*;
+import com.vincestyling.asqliteplus.statement.QueryStatement;
+import com.vincestyling.asqliteplus.statement.UpdateStatement;
 import com.vincestyling.asqliteplus.table.Suppliers;
 import com.vincestyling.asqliteplus.table.Table;
 

@@ -33,6 +33,10 @@ public abstract class Table {
         return columns;
     }
 
+    /**
+     * Preparing for the specified Table. In order to prevent last test cases affect current execution,
+     * first will drop the old table if exists, then create it and populating the dummy datas.
+     */
     public static void prepare(Class<? extends Table> clazz) throws Exception {
         Object tableName = clazz.getField("TABLE_NAME").get(null);
 

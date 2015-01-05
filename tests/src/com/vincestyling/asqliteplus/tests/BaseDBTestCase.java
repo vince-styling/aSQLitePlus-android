@@ -33,8 +33,10 @@ public abstract class BaseDBTestCase extends AndroidTestCase {
         setUpDB();
     }
 
+    /**
+     * Creating and populating dummy data to tables.
+     */
     protected void setUpDB() throws Exception {
-        // creating and populating dummy data to tables.
         Table.prepare(Categories.class);
         mStatement = QueryStatement.rowCount().from(Categories.TABLE_NAME);
         assertGreatThan("SELECT count(*) FROM Categories", 0);
