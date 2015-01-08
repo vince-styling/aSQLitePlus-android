@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+        This Maven configuration only used to release this library to the Maven Central,
+        don't means this is a Maven project, ignore this file when you import this project to any IDE.
+    -->
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <relativePath />
+        <version>7</version>
+    </parent>
+
+    <groupId>com.vincestyling.asqliteplus</groupId>
+    <artifactId>asqliteplus</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>aSQLite+</name>
+    <inceptionYear>2015</inceptionYear>
+    <url>https://github.com/vince-styling/aSQLitePlus-android</url>
+    <description>A library bring numerous handy classes and methods to help us concatenating and performing those CURD SQLs in Android SQLite.</description>
+
+    <scm>
+        <connection>scm:git:git@github.com:vince-styling/aSQLitePlus-android.git</connection>
+        <developerConnection>scm:git:git@github.com:vince-styling/aSQLitePlus-android.git</developerConnection>
+        <url>git@github.com:vince-styling/aSQLitePlus-android.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>vince-styling</id>
+            <name>Vince Styling</name>
+            <email>lingyunxiao@qq.com</email>
+            <url>http://vincestyling.com/</url>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
+            <version>4.1.1.4</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                <artifactId>android-maven-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <sdk>
+                        <platform>14</platform>
+                    </sdk>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4.2</version>
+                <configuration>
+                    <goals>deploy</goals>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
