@@ -276,12 +276,15 @@ public class DBOverseer {
      * @param mapper the fetching principle for one row.
      * @param <T>    the generic entity which represent one row.
      */
-    public <T> void getList(Object sql, List<T> list, RowMapper<T> mapper) {
+    public <T> void getList(Object sql, ArrayList<T> list, RowMapper<T> mapper) {
         Cursor cursor = null;
         try {
             debugSql(sql);
             cursor = mDBHelper.getReadableDatabase().rawQuery(sql.toString(), null);
             if (cursor.moveToFirst()) {
+                // stretching the ArrayList for a good performance during filling.
+                list.ensureCapacity(cursor.getCount());
+
                 do {
                     list.add(mapper.mapRow(cursor));
                 } while (cursor.moveToNext());
@@ -303,7 +306,7 @@ public class DBOverseer {
      * @return the resultset list.
      */
     public <T> List<T> getList(Object sql, RowMapper<T> mapper) {
-        List<T> list = new ArrayList<T>();
+        ArrayList<T> list = new ArrayList<T>();
         getList(sql, list, mapper);
         return list;
     }
