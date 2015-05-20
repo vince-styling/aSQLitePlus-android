@@ -448,14 +448,14 @@ or grab via **Maven** :
 <dependency>
   <groupId>com.vincestyling.asqliteplus</groupId>
   <artifactId>asqliteplus</artifactId>
-  <version>0.1</version>
+  <version>0.2</version>
 </dependency>
 ```
 
 For **Gradle** projects use :
 
 ```groovy
-compile 'com.vincestyling.asqliteplus:asqliteplus:0.1'
+compile 'com.vincestyling.asqliteplus:asqliteplus:0.2'
 ```
 
 If you have some changes for the source code, you can use `ant` to packaging a SNAPSHOT jar for test.
@@ -464,7 +464,7 @@ If you have some changes for the source code, you can use `ant` to packaging a S
 # enter the project's root directory
 ~ $ cd PROJECT_ROOT_DIR
 
-# packaging a new jar, it would place to "PROJECT_ROOT_DIR/bin/asqliteplus-0.1.jar".
+# packaging a new jar, it would place to "PROJECT_ROOT_DIR/bin/asqliteplus-0.2.jar".
 ~ $ ant jar
 ```
 
