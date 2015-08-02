@@ -9,7 +9,7 @@ You probably already know that Android also provided many methods for us to help
 SELECT product_id, product_name FROM Products WHERE price >= 10 ORDER BY price DESC LIMIT 10
 ```
 
-With Android libcore on our hands currently, we maybe coding like following to achieve it :
+With Android libcore on our hands currently, we probably coding like following to achieve it :
 
 ```java
 String sql = android.database.sqlite.SQLiteQueryBuilder.buildQueryString(false,
