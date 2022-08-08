@@ -25,7 +25,7 @@ Statement statement = QueryStatement.produce("product_id", "product_name")
 String sql = statement.toString();
 ```
 
-aSQLite+ bring you more accurate method naming and less parameters method signature, make it clear and more readable, also understandable and maintainable. Every method representing one SQL keyword or clause, this way of separation make you not easy to make mistakes during writing SQL statement. You would only apply them in the producing SQL statement whenever necessary. Which **greatly simplifying** the SQL statement constructing against using Android libcore even using `+` to tearing those statements to pieces.
+aSQLite+ bring you more accurate method naming and less parameters method signature, make it clear and more readable, also understandable and maintainable. Every method representing one [SQL keyword](https://www.scaler.com/topics/sql/keywords-in-sql/) or clause, this way of separation make you not easy to make mistakes during writing SQL statement. You would only apply them in the producing SQL statement whenever necessary. Which **greatly simplifying** the SQL statement constructing against using Android libcore even using `+` to tearing those statements to pieces.
 
 
 
