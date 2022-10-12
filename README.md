@@ -384,7 +384,7 @@ public class DBOverseer {
 }
 ```
 
-All methods of DBOverseer accepts the SQL as an Object, only its `toString()` matter. In other words, developer can constructing any Object such as String, StringBuilder, Statement to carrying the SQL statement, just make sure that the **toString()** method would return the final SQL statement you want to be executing.
+All methods of DBOverseer accepts the [SQL](https://www.interviewbit.com/courses/databases/sql-queries/sql-introduction/) as an Object, only its `toString()` matter. In other words, developer can constructing any Object such as String, StringBuilder, Statement to carrying the SQL statement, just make sure that the **toString()** method would return the final SQL statement you want to be executing.
 
 You can checking the test cases of DBOverseer for more details.
 
